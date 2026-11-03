@@ -42,7 +42,7 @@ def parse_args():
                         choices=['at_risk', 'balanced', 'high_achiever', 'real_at_risk', 'real_placed', 'real_student'],
                         help="Predict and generate recourse for a student preset or real cohort record")
     parser.add_argument("--serve", action="store_true", help="Launch interactive web application")
-    parser.add_argument("--port", type=int, default=5000, help="Web application port (default 5000)")
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", 5000)), help="Web application port (default 5000 or $PORT)")
     parser.add_argument("--all", action="store_true", help="Run full pipeline: verify data, train, benchmark, evaluate real cohort, and serve")
     return parser.parse_args()
 
