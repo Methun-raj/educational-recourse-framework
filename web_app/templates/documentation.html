@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Methodology & Architecture - EduForecaster XAI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="header-text">
+        <h1>Theoretical Framework & Methodology</h1>
+        <p>Comprehensive overview of mathematical formulations, multi-stage architecture, SHAP explainability, and counterfactual recourse.</p>
+    </div>
+</div>
+
+<div class="card doc-card">
+    <div class="card-header">
+        <h2><i class="fa-solid fa-lightbulb text-warning"></i> Motivation & Identified Research Gaps</h2>
+    </div>
+    <div class="card-body doc-content">
+        <p>Prior educational data mining systems suffer from three fundamental limitations:</p>
+        <div class="doc-gaps-grid">
+            <div class="gap-box">
+                <div class="gap-icon"><i class="fa-solid fa-compress text-danger"></i></div>
+                <h4>1. Narrow Feature Scope</h4>
+                <p>Evaluating only cognitive metrics (CGPA, test marks) while neglecting non-cognitive drivers like attendance, soft skills, extracurricular engagement, and socio-economic support.</p>
+            </div>
+            <div class="gap-box">
+                <div class="gap-icon"><i class="fa-solid fa-hourglass-end text-warning"></i></div>
+                <h4>2. Late-Stage Horizon</h4>
+                <p>Predicting only during final semesters (Sem 7–8) immediately prior to campus interviews, preventing institutions from deploying timely remediation in earlier semesters (Sem 1–4).</p>
+            </div>
+            <div class="gap-box">
+                <div class="gap-icon"><i class="fa-solid fa-cube text-primary"></i></div>
+                <h4>3. Single-Model Black-Box</h4>
+                <p>Applying a single monolithic classifier across heterogeneous educational tasks with zero task specialization, transparent attribution, or actionable recourse.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card doc-card">
+    <div class="card-header">
+        <h2><i class="fa-solid fa-square-root-variable text-primary"></i> Mathematical Formulations</h2>
+    </div>
+    <div class="card-body doc-content">
+        <!-- Equation 1 -->
+        <div class="math-block">
+            <div class="math-title">Equation 1 &mdash; Multi-Modal Feature Space Formulation</div>
+            <div class="math-formula">
+                x_i = [ x_i^{(acad)} \parallel x_i^{(socio)} \parallel x_i^{(behav)} ] \in \mathbb{R}^d
+            </div>
+            <p>Each student profile concatenates intermediate entrance marks ($x_i^{(acad)}$), demographic/socio-economic status ($x_i^{(socio)}$), and behavioral/co-curricular participation ($x_i^{(behav)}$).</p>
+        </div>
+
+        <!-- Equation 2 -->
+        <div class="math-block">
+            <div class="math-title">Equation 2 &mdash; Stage 1: Branch Recommendation (Random Forest)</div>
+            <div class="math-formula">
+                \hat{y}_i^{(b)} = \arg \max_{c \in \{1..C\}} \frac{1}{B} \sum_{b=1}^B \mathbb{I}( T_b(x_i) = c )
+            </div>
+            <p>An ensemble of $B$ randomized decision trees processes mixed numerical and categorical early records, providing robustness to noise and intrinsic impurity-based feature rankings.</p>
+        </div>
+
+        <!-- Equation 3 -->
+        <div class="math-block">
+            <div class="math-title">Equation 3 &mdash; Stage 2: Longitudinal Academic Performance (XGBoost + GB)</div>
+            <div class="math-formula">
+                \mathcal{L}_{acad}^{(t)} = \sum_{i=1}^N l( y_i^{(a)}, \hat{y}_i^{(a, t-1)} + f_t(\tilde{x}_i) ) + \gamma J + \frac{\lambda}{2} \sum_{j=1}^J w_j^2
+            </div>
+            <p>Conditioned on student profile and predicted branch $\tilde{x}_i = [x_i \parallel \hat{y}_i^{(b)}]$, gradient boosted trees minimize regularized objective to capture high-order non-linear interactions across semesters.</p>
+        </div>
+
+        <!-- Equation 4 -->
+        <div class="math-block">
+            <div class="math-title">Equation 4 &mdash; Stage 3: Hybrid Campus Placement Prediction (XGBoost + SVM)</div>
+            <div class="math-formula">
+                P_{hybrid}(y_i^{(p)} = 1 \mid z_i) = \alpha P_{XGB}(y_i^{(p)} = 1 \mid z_i) + (1 - \alpha) \sigma(A \cdot f_{SVM}(z_i) + B)
+            </div>
+            <p>Augmented profile $z_i = [\tilde{x}_i \parallel \hat{y}_i^{(a)}]$ feeds a calibrated meta-learner blending XGBoost log-odds probability with Platt-scaled RBF-SVM margin probability ($\alpha = 0.55$).</p>
+        </div>
+
+        <!-- Equation 5 -->
+        <div class="math-block">
+            <div class="math-title">Equation 5 &mdash; SHAP Feature Attribution Decomposition</div>
+            <div class="math-formula">
+                f(x_i) = \phi_0 + \sum_{j=1}^d \phi_j(x_i), \quad \phi_j(x_i) = \sum_{S \subseteq F \setminus \{j\}} \frac{|S|!(|F|-|S|-1)!}{|F|!} [ f_{S \cup \{j\}}(x_i) - f_S(x_i) ]
+            </div>
+            <p>Decomposes individual student placement forecasts into additive local attributions $\phi_j$ relative to cohort expectation $\phi_0 = 0.680$, revealing positive and negative drivers.</p>
+        </div>
+
+        <!-- Equation 6 -->
+        <div class="math-block">
+            <div class="math-title">Equation 6 &mdash; Constrained Counterfactual Recourse Optimization</div>
+            <div class="math-formula">
+                x_i^* = \arg \min_{x'} \left[ d_{MAD}(x_i, x') - \mu \cdot P_{hybrid}(y_i^{(p)} = 1 \mid x') \right] \quad \text{subject to} \quad x'_{F_{imm}} = x_{i, F_{imm}}
+            </div>
+            <p>Feature space partitioned into immutable socio-demographics ($F_{imm}$) and mutable actionable features ($F_{mut}$). Guarantees recommendations never penalize socio-economic background, focusing strictly on attendance, tutoring, hackathons, and mock interview training.</p>
+        </div>
+    </div>
+</div>
+
+<div class="card doc-card">
+    <div class="card-header">
+        <h2><i class="fa-solid fa-sitemap text-success"></i> Hierarchical Workflow Diagram (Figure 1)</h2>
+    </div>
+    <div class="card-body">
+        <div class="figure-container">
+            <img src="/exports/figure1_workflow.png" alt="Figure 1 Flowchart" class="responsive-img">
+        </div>
+    </div>
+</div>
+{% endblock %}

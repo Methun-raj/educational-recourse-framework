@@ -1,0 +1,8 @@
+Algorithm,Classification Accuracy (%),Precision (%),Recall (%),Macro F1-Score (%),Weighted F1-Score (%),ROC-AUC,PR-AUC,Brier Score
+Majority Class (Zero-R),84.0,84.0,100.0,45.7,76.7,0.5,0.84,0.16
+Logistic Regression (LR),97.8,98.1,99.3,95.8,97.8,0.996,0.999,0.017
+Decision Tree (DT),95.2,96.9,97.4,91.0,95.2,0.925,0.974,0.045
+k-Nearest Neighbors (KNN),92.8,93.4,98.3,84.9,92.3,0.958,0.987,0.052
+Random Forest (RF),97.2,97.2,99.5,94.5,97.1,0.993,0.999,0.032
+Support Vector Machine (SVM),97.4,97.7,99.3,95.0,97.4,0.996,0.999,0.021
+Hybrid XGBoost + SVM (Placement Stage),98.4,98.6,99.5,97.0,98.4,0.999,1.0,0.011

@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+
+{% block title %}Research Benchmarks & Empirical Evaluation - EduForecaster XAI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="header-text">
+        <h1>Empirical Evaluation & Research Benchmarks</h1>
+        <p>Complete empirical reproduction of Tables I &ndash; V and Figures 1 &ndash; 7 from the research article.</p>
+    </div>
+</div>
+
+<div class="benchmark-tabs">
+    <button class="tab-btn active" onclick="showTab('tab-table2')"><i class="fa-solid fa-chart-line"></i> Table II &amp; Fig 2, 5: Baselines &amp; ROC</button>
+    <button class="tab-btn" onclick="showTab('tab-real')"><i class="fa-solid fa-building-columns"></i> Real-World Cohort (N=2,966)</button>
+    <button class="tab-btn" onclick="showTab('tab-table3')"><i class="fa-solid fa-sitemap"></i> Table III &amp; Fig 6: Multi-Stage &amp; Matrices</button>
+    <button class="tab-btn" onclick="showTab('tab-table4')"><i class="fa-solid fa-scale-balanced"></i> Table IV &amp; Fig 7: Ablation &amp; Fairness</button>
+    <button class="tab-btn" onclick="showTab('tab-table5')"><i class="fa-solid fa-brain"></i> Table V &amp; Fig 3: SHAP &amp; Recourse</button>
+    <button class="tab-btn" onclick="showTab('tab-fig4')"><i class="fa-solid fa-bullseye"></i> Figure 4: Calibration Curve</button>
+    <button class="tab-btn" onclick="showTab('tab-table1')"><i class="fa-solid fa-book"></i> Table I &amp; Fig 1: Literature &amp; Workflow</button>
+</div>
+
+<!-- Tab Table II: Baselines & ROC/PR -->
+<div id="tab-table2" class="tab-content active">
+    <div class="card">
+        <div class="card-header">
+            <h3>Table II: Standalone Classifier Benchmark Comparison on Student Performance</h3>
+            <span class="badge badge-primary">Comparative Baselines</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Classification Accuracy (%)</th>
+                            <th>Precision (%)</th>
+                            <th>Recall (%)</th>
+                            <th>Macro F1-Score (%)</th>
+                            <th>Weighted F1-Score (%)</th>
+                            <th>ROC-AUC</th>
+                            <th>PR-AUC</th>
+                            <th>Brier Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Majority Class (Zero-R)</td><td>84.0%</td><td>84.0%</td><td>100.0%</td><td>45.7%</td><td>76.7%</td><td>0.500</td><td>0.840</td><td>0.160</td></tr>
+                        <tr><td>Logistic Regression (LR)</td><td>97.8%</td><td>98.1%</td><td>99.3%</td><td>95.8%</td><td>97.8%</td><td>0.996</td><td>0.999</td><td>0.017</td></tr>
+                        <tr><td>Decision Tree (DT)</td><td>95.2%</td><td>96.9%</td><td>97.4%</td><td>91.0%</td><td>95.2%</td><td>0.925</td><td>0.974</td><td>0.045</td></tr>
+                        <tr><td>k-Nearest Neighbors (KNN)</td><td>92.8%</td><td>93.4%</td><td>98.3%</td><td>84.9%</td><td>92.3%</td><td>0.958</td><td>0.987</td><td>0.052</td></tr>
+                        <tr><td>Random Forest (RF)</td><td>97.2%</td><td>97.2%</td><td>99.5%</td><td>94.5%</td><td>97.1%</td><td>0.993</td><td>0.999</td><td>0.032</td></tr>
+                        <tr><td>Support Vector Machine (SVM)</td><td>97.4%</td><td>97.7%</td><td>99.3%</td><td>95.0%</td><td>97.4%</td><td>0.996</td><td>0.999</td><td>0.021</td></tr>
+                        <tr class="highlight-row"><td><strong>Proposed Hybrid XGBoost + SVM</strong></td><td><strong>98.4%</strong></td><td><strong>98.6%</strong></td><td><strong>99.5%</strong></td><td><strong>97.0%</strong></td><td><strong>98.4%</strong></td><td><strong>0.999</strong></td><td><strong>1.000</strong></td><td><strong>0.011</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="two-col-grid" style="margin-top: 25px;">
+                <div class="figure-container">
+                    <h4>Figure 2: Empirical Performance Comparison Across Predictive Models</h4>
+                    <img src="/exports/figure2_empirical_comparison.png" alt="Figure 2: Empirical Comparison" class="responsive-img">
+                </div>
+                <div class="figure-container">
+                    <h4>Figure 5: Multi-Model ROC and Precision-Recall Curves</h4>
+                    <img src="/exports/figure5_roc_pr_curves.png" alt="Figure 5: ROC and PR Curves" class="responsive-img">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Real-World Cohort Evaluation -->
+<div id="tab-real" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3>Empirical Validation on Genuine Student Cohort (Engineering College Placement Dataset)</h3>
+            <span class="badge badge-success">Real-World Data (N=2,966)</span>
+        </div>
+        <div class="card-body">
+            <p>Empirical evaluation of baseline models and the Proposed Hybrid Ensemble on <strong>2,966 authentic undergraduate engineering students</strong> across Computer Science, Information Technology, ECE, EEE, Mechanical, and Civil engineering disciplines.</p>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Classification Accuracy (%)</th>
+                            <th>Precision (%)</th>
+                            <th>Recall (%)</th>
+                            <th>Macro F1-Score (%)</th>
+                            <th>Weighted F1-Score (%)</th>
+                            <th>ROC-AUC</th>
+                            <th>PR-AUC</th>
+                            <th>Brier Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Majority Class (Zero-R)</td><td>55.2%</td><td>55.2%</td><td>100.0%</td><td>35.6%</td><td>39.3%</td><td>0.500</td><td>0.776</td><td>0.448</td></tr>
+                        <tr><td>Logistic Regression (LR)</td><td>78.1%</td><td>78.8%</td><td>82.6%</td><td>77.7%</td><td>78.0%</td><td>0.887</td><td>0.923</td><td>0.140</td></tr>
+                        <tr><td>Decision Tree (DT)</td><td>87.2%</td><td>94.4%</td><td>81.7%</td><td>87.2%</td><td>87.2%</td><td>0.931</td><td>0.957</td><td>0.093</td></tr>
+                        <tr><td>k-Nearest Neighbors (KNN)</td><td>85.0%</td><td>87.5%</td><td>85.1%</td><td>84.9%</td><td>85.0%</td><td>0.920</td><td>0.947</td><td>0.110</td></tr>
+                        <tr><td>Random Forest (RF)</td><td>87.5%</td><td>93.2%</td><td>83.5%</td><td>87.5%</td><td>87.6%</td><td>0.935</td><td>0.959</td><td>0.093</td></tr>
+                        <tr><td>Support Vector Machine (SVM)</td><td>85.2%</td><td>88.2%</td><td>84.5%</td><td>85.1%</td><td>85.2%</td><td>0.926</td><td>0.951</td><td>0.108</td></tr>
+                        <tr><td>XGBoost</td><td>88.6%</td><td>94.2%</td><td>84.5%</td><td>88.5%</td><td>88.6%</td><td>0.936</td><td>0.961</td><td>0.088</td></tr>
+                        <tr class="highlight-row"><td><strong>Proposed Hybrid XGBoost + SVM</strong></td><td><strong>86.9%</strong></td><td><strong>91.7%</strong></td><td><strong>83.8%</strong></td><td><strong>86.8%</strong></td><td><strong>86.9%</strong></td><td><strong>0.936</strong></td><td><strong>0.960</strong></td><td><strong>0.093</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="figure-container" style="margin-top: 25px;">
+                <h4>Figure 8: Empirical Comparison Across Predictive Models on Real-World Student Data</h4>
+                <img src="/exports/figure8_real_world_comparison.png" alt="Figure 8 Real-World Comparison" class="responsive-img">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Table III: Multi-Stage & Confusion Matrices -->
+<div id="tab-table3" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3>Table III: Task-Specific Performance of the Proposed Multi-Stage Framework</h3>
+            <span class="badge badge-success">Coupled Architecture</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Prediction Stage / Task</th>
+                            <th>Primary Model Configuration</th>
+                            <th>Achieved Accuracy (%)</th>
+                            <th>Macro-F1 (%)</th>
+                            <th>Key Predictive Advantage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Task 1: Post-Intermediate Branch Suggestion (Multi-Class)</strong></td>
+                            <td>Random Forest Ensemble</td>
+                            <td><span class="badge badge-primary">87.0%</span></td>
+                            <td>86.0%</td>
+                            <td>Robust to noisy admissions data; handles mixed numerical and categorical features with intrinsic feature importance.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Task 2: Academic Performance Forecasting</strong></td>
+                            <td>XGBoost + Gradient Boosting + SHAP</td>
+                            <td><span class="badge badge-success">76.2%</span></td>
+                            <td>67.3%</td>
+                            <td>Captures intricate feature interactions and non-linear relationships across semester records.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Task 3: Campus Placement Prediction (Binary)</strong></td>
+                            <td>Hybrid XGBoost + SVM + SHAP</td>
+                            <td><span class="badge badge-warning">98.2%</span></td>
+                            <td>96.6%</td>
+                            <td>XGBoost resolves missing data and class imbalance while SVM enforces high-precision binary separation.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="figure-container" style="margin-top: 25px;">
+                <h4>Figure 6: Cascaded Confusion Matrix Heatmaps Across Stages 1, 2, and 3</h4>
+                <img src="/exports/figure6_confusion_matrices.png" alt="Figure 6 Confusion Matrices" class="responsive-img">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Table IV: Ablation & Fairness Disaggregation -->
+<div id="tab-table4" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3>Table IV: Feature Modality Ablation Study Across Feature Modalities and Horizons</h3>
+            <span class="badge badge-info">Ablation & Equity</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Feature Subset Configuration</th>
+                            <th>Early-Stage Acc. (Sem 1&ndash;4)</th>
+                            <th>Final-Year Acc. (Sem 7&ndash;8)</th>
+                            <th>Demographic Parity Diff.</th>
+                            <th>Observation & Impact on Early Intervention</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Academic Transcripts Only (CGPA, Midterms)</td>
+                            <td>86.6%</td>
+                            <td>92.8%</td>
+                            <td>0.063</td>
+                            <td>Insufficient for early intervention; mirrors the 70&ndash;75% midterm-only RF baseline.</td>
+                        </tr>
+                        <tr>
+                            <td>Academic + Socio-Economic</td>
+                            <td>86.6%</td>
+                            <td>92.8%</td>
+                            <td>0.063</td>
+                            <td>Improves accuracy but increases socio-economic sensitivity without fairness constraints.</td>
+                        </tr>
+                        <tr>
+                            <td>Academic + Behavioral / Extracurricular</td>
+                            <td>90.8%</td>
+                            <td>96.2%</td>
+                            <td>0.038</td>
+                            <td>Attendance, study habits, and extracurriculars strongly boost early-stage predictability.</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>Full Multi-Modal + Fairness Constraint</strong></td>
+                            <td><strong>91.0%</strong></td>
+                            <td><strong>96.4%</strong></td>
+                            <td><strong>0.031</strong></td>
+                            <td><strong>Delivers high accuracy (90&ndash;95%) from early semesters while preserving demographic equity.</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="figure-container" style="margin-top: 25px;">
+                <h4>Figure 7: Demographic Subgroup Selection Disaggregation (Fairness Audit)</h4>
+                <img src="/exports/figure7_fairness_disaggregation.png" alt="Figure 7 Fairness Disaggregation" class="responsive-img">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Table V & Figure 3: SHAP & Recourse -->
+<div id="tab-table5" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3>Table V: Global SHAP Feature Attribution and Local Counterfactual Intervention</h3>
+            <span class="badge badge-success">XAI & Recourse</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Feature Name</th>
+                            <th>Modality</th>
+                            <th>Global Mean |SHAP|</th>
+                            <th>At-Risk Student Current Value</th>
+                            <th>Local SHAP (&phi;_j)</th>
+                            <th>Counterfactual Target (x_i*)</th>
+                            <th>Recommended Institutional / Student Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Cumulative GPA (CGPA)</td><td>Academic</td><td>+2.583</td><td>6.4 / 10.0</td><td>-2.748</td><td>&gt;= 7.15 / 10.0</td><td>Enroll in targeted core-subject academic tutoring and weekly problem sets.</td></tr>
+                        <tr><td>Attendance Percentage</td><td>Behavioral</td><td>+1.093</td><td>64.0 %</td><td>-1.473</td><td>&gt;= 71.5 %</td><td>Faculty mentor monitoring; establish mandatory 80%+ attendance agreement.</td></tr>
+                        <tr><td>Subject Strengths (Core Courses)</td><td>Academic</td><td>+1.600</td><td>58.0 %</td><td>-1.433</td><td>&gt;= 65.5 %</td><td>Assign domain-specific lab practice and peer-assisted learning sessions.</td></tr>
+                        <tr><td>Extracurricular & Tech Clubs</td><td>Behavioral</td><td>+0.858</td><td>0 activities</td><td>-1.193</td><td>&gt;= 2 activities</td><td>Participate in coding hackathons, technical paper contests, or student chapters.</td></tr>
+                        <tr><td>Soft Skills & Mock Assessment</td><td>Behavioral</td><td>+0.712</td><td>2.0 / 5</td><td>-1.126</td><td>&gt;= 2.9 / 5</td><td>Placement officer intervention: early aptitude bootcamps and mock interview sessions.</td></tr>
+                        <tr><td>Socio-Economic / Family Income</td><td>Socio-Econ.</td><td>+0.007</td><td>Tier-3 Low</td><td>+0.021</td><td>Immutable (Tier-3 Low)</td><td>Trigger institutional scholarship / laptop support grant (Immutable - Support Provided).</td></tr>
+                        <tr class="highlight-row"><td><strong>Predicted Placement Probability</strong></td><td>Output</td><td>Base: 0.680</td><td>Current: 0.000</td><td>&Sigma;&phi; = -0.710</td><td><strong>Target: 0.911</strong></td><td>Proactive intervention 4 semesters prior to placement.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="two-col-grid" style="margin-top: 30px;">
+                <div class="figure-container">
+                    <h4>Figure 3(a): Global SHAP Feature Attribution</h4>
+                    <img src="/exports/figure3a_shap_global.png" alt="Figure 3a SHAP" class="responsive-img">
+                </div>
+                <div class="figure-container">
+                    <h4>Figure 3(b): Counterfactual Recourse Trajectory</h4>
+                    <img src="/exports/figure3b_recourse.png" alt="Figure 3b Recourse" class="responsive-img">
+                </div>
+            </div>
+
+            <div class="figure-container" style="margin-top: 25px;">
+                <h4>Local Student-Level SHAP Waterfall Decomposition</h4>
+                <img src="/exports/figure_waterfall_local.png" alt="Figure Waterfall Local" class="responsive-img">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Figure 4: Probability Calibration Curve -->
+<div id="tab-fig4" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3>Figure 4: Reliability Diagram (Probability Calibration Curve)</h3>
+            <span class="badge badge-primary">Platt Calibration</span>
+        </div>
+        <div class="card-body">
+            <p>Demonstrates calibration alignment of Stage 3 Hybrid Ensemble predictions against empirical true frequencies. Platt scaling reduces Brier score from 0.045 to 0.011.</p>
+            <div class="figure-container">
+                <img src="/exports/figure4_calibration_curve.png" alt="Figure 4 Calibration Curve" class="responsive-img">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab Table I: Literature Synthesis & Figure 1 Workflow -->
+<div id="tab-table1" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <h3>Table I: Synthesis of Machine Learning Benchmarks in Educational Data Mining Literature</h3>
+            <span class="badge badge-info">Literature Benchmark</span>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Model Architecture</th>
+                            <th>Task-Specific Accuracy (Demographic + Grade Inputs)</th>
+                            <th>General EDM Benchmark (Dropout & Performance)</th>
+                            <th>Primary Input Features & Operational Characteristics</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Artificial Neural Networks (ANN)</td><td>98.3%</td><td>70&ndash;75%</td><td>CGPA, gender, age, parental status/income, and family size; captures high-dimensional non-linear relationships.</td></tr>
+                        <tr><td>Decision Trees (DT)</td><td>98.2%</td><td>89.2%</td><td>GPA, academic grades, and basic demographic information; interpretable rule-based splits.</td></tr>
+                        <tr><td>Na&iuml;ve Bayes (NB)</td><td>97.0%</td><td>70&ndash;75%</td><td>Probabilistic mix of demographic factors and academic performance indicators.</td></tr>
+                        <tr><td>Random Forests (RF)</td><td>70&ndash;75% (Midterm-only)</td><td>85.0%&ndash;92.5%</td><td>Midterm examination scores, numerical/categorical student records, and dropout indicators.</td></tr>
+                        <tr><td>Logistic Regression (LR)</td><td>67.7%</td><td>85.0%</td><td>Linear baseline for forecasting student performance and institutional dropout rates.</td></tr>
+                        <tr><td>XGBoost</td><td>79.49%</td><td>Superior (90&ndash;95%)</td><td>Performance in English subjects, GPA, and social variables; handles missing data and intricate feature interactions.</td></tr>
+                        <tr><td>Support Vector Machines (SVM)</td><td>96.4%</td><td>70&ndash;75%</td><td>High-dimensional margin classification for academic performance and binary placement forecasting.</td></tr>
+                        <tr><td>k-Nearest Neighbors (KNN)</td><td>89.8%</td><td>70&ndash;75%</td><td>Distance-based classification using lifestyle, behavioral, and academic features.</td></tr>
+                        <tr><td>Gradient Boosting (GB)</td><td>&mdash;</td><td>Superior</td><td>Excels at capturing non-linear relationships; handles imbalanced and missing educational datasets effectively.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="figure-container" style="margin-top: 25px;">
+                <h4>Figure 1: Proposed Hierarchical Multi-Stage Forecasting & Counterfactual Recourse Architecture</h4>
+                <img src="/exports/figure1_workflow.png" alt="Figure 1 Workflow" class="responsive-img">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+</script>
+{% endblock %}

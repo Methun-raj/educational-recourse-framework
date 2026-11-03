@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction & Recourse Studio - EduForecaster XAI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="header-text">
+        <h1>Hierarchical Multi-Stage Student Forecasting & Explainable Recourse</h1>
+        <p>Jointly predict post-intermediate academic branch suitability, longitudinal academic performance, and campus placement probability with actionable counterfactual interventions.</p>
+    </div>
+    <div class="preset-selector">
+        <span class="preset-label"><i class="fa-solid fa-bolt"></i> Quick Presets:</span>
+        <button type="button" class="btn btn-outline" onclick="loadPreset('at_risk')">
+            <i class="fa-solid fa-triangle-exclamation text-danger"></i> At-Risk Student (Sem 4)
+        </button>
+        <button type="button" class="btn btn-outline" onclick="loadPreset('balanced')">
+            <i class="fa-solid fa-scale-balanced text-primary"></i> Balanced Student
+        </button>
+        <button type="button" class="btn btn-outline" onclick="loadPreset('high_achiever')">
+            <i class="fa-solid fa-star text-warning"></i> High Achiever
+        </button>
+        <button type="button" class="btn btn-outline" onclick="loadPreset('real_at_risk')">
+            <i class="fa-solid fa-user-shield text-danger"></i> Real Cohort (At-Risk)
+        </button>
+        <button type="button" class="btn btn-outline" onclick="loadPreset('real_placed')">
+            <i class="fa-solid fa-graduation-cap text-success"></i> Real Cohort (Placed)
+        </button>
+        <button type="button" class="btn btn-outline" onclick="loadPreset('user_student')">
+            <i class="fa-solid fa-cloud-arrow-up text-primary"></i> User-Integrated Student
+        </button>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Left Column: Input Form -->
+    <div class="card form-card">
+        <div class="card-header">
+            <h2><i class="fa-solid fa-sliders"></i> Multi-Modal Student Profile</h2>
+            <span class="badge badge-info">Concatenated Feature Space x_i</span>
+        </div>
+        <form id="student-form" onsubmit="handleFormSubmit(event)">
+            <!-- Modality 1: Socio-Demographics (F_imm) -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-user-group text-primary"></i>
+                    <span>1. Socio-Economic & Demographics <span class="tag-immutable">Immutable (F_imm)</span></span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" value="20" min="17" max="28" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="family_size">Family Size</label>
+                        <input type="number" id="family_size" name="family_size" value="5" min="1" max="10" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="family_income_bracket">Family Income Bracket</label>
+                        <select id="family_income_bracket" name="family_income_bracket">
+                            <option value="Tier-3 Low">Tier-3 (Low Income)</option>
+                            <option value="Tier-2 Middle">Tier-2 (Middle Income)</option>
+                            <option value="Tier-1 High">Tier-1 (High Income)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="parental_education">Parental Education</label>
+                        <select id="parental_education" name="parental_education">
+                            <option value="High School">High School</option>
+                            <option value="Bachelor">Bachelor Degree</option>
+                            <option value="Master">Master Degree</option>
+                            <option value="Doctorate">Doctorate</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="parental_status">Parental Status</label>
+                        <select id="parental_status" name="parental_status">
+                            <option value="Married">Married</option>
+                            <option value="Single">Single</option>
+                            <option value="Divorced">Divorced</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modality 2: Intermediate Academic Records -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-book text-success"></i>
+                    <span>2. Intermediate Academic Background</span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="intermediate_math">Math Score (%)</label>
+                        <input type="number" step="0.1" id="intermediate_math" name="intermediate_math" value="62.0" min="30" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="intermediate_physics">Physics Score (%)</label>
+                        <input type="number" step="0.1" id="intermediate_physics" name="intermediate_physics" value="59.0" min="30" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="intermediate_chemistry">Chemistry Score (%)</label>
+                        <input type="number" step="0.1" id="intermediate_chemistry" name="intermediate_chemistry" value="60.0" min="30" max="100" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="intermediate_english">English Proficiency (%)</label>
+                        <input type="number" step="0.1" id="intermediate_english" name="intermediate_english" value="58.0" min="30" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="intermediate_aggregate">Intermediate Aggregate (%)</label>
+                        <input type="number" step="0.1" id="intermediate_aggregate" name="intermediate_aggregate" value="59.8" min="30" max="100" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modality 3: Behavioral & Co-Curricular (F_mut) -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-person-walking text-warning"></i>
+                    <span>3. Behavioral & Co-Curricular <span class="tag-mutable">Actionable (F_mut)</span></span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="attendance_percentage">Attendance Rate (%)</label>
+                        <input type="number" step="0.1" id="attendance_percentage" name="attendance_percentage" value="64.0" min="40" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="study_hours_per_week">Study Hours/Week</label>
+                        <input type="number" step="0.5" id="study_hours_per_week" name="study_hours_per_week" value="8.0" min="2" max="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="extracurricular_clubs">Extracurricular / Tech Clubs</label>
+                        <input type="number" id="extracurricular_clubs" name="extracurricular_clubs" value="0" min="0" max="8" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="soft_skills_score">Soft Skills & Mock Score (1 - 5)</label>
+                        <input type="number" step="0.1" id="soft_skills_score" name="soft_skills_score" value="2.0" min="1.0" max="5.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="certifications_count">Certifications / Internships</label>
+                        <input type="number" id="certifications_count" name="certifications_count" value="0" min="0" max="6" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modality 4: Longitudinal College Academics -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-graduation-cap text-info"></i>
+                    <span>4. Longitudinal College Performance <span class="tag-mutable">Actionable (F_mut)</span></span>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cgpa">Cumulative GPA (CGPA: 0 - 10.0)</label>
+                        <input type="number" step="0.01" id="cgpa" name="cgpa" value="6.40" min="3.0" max="10.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="midterm_score">Midterm Score (%)</label>
+                        <input type="number" step="0.1" id="midterm_score" name="midterm_score" value="60.5" min="35" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="core_course_score">Core Course Score (%)</label>
+                        <input type="number" step="0.1" id="core_course_score" name="core_course_score" value="58.0" min="35" max="100" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-play"></i> Run Cascaded 3-Stage Prediction & Recourse
+            </button>
+        </form>
+    </div>
+
+    <!-- Right Column: Results Dashboard -->
+    <div class="results-column">
+        <!-- Loading State -->
+        <div id="loading-spinner" class="card loading-card" style="display: none;">
+            <div class="spinner"></div>
+            <p>Executing Multi-Stage Inference Pipeline...</p>
+            <span class="subtext">Stage 1 (RF) &rarr; Stage 2 (XGB+GB) &rarr; Stage 3 (XGB+SVM) &rarr; SHAP & Recourse Engine</span>
+        </div>
+
+        <!-- Initial Placeholder -->
+        <div id="empty-state" class="card empty-card">
+            <i class="fa-solid fa-chart-pie empty-icon"></i>
+            <h3>Ready for Multi-Stage Evaluation</h3>
+            <p>Select a quick preset or customize student parameters on the left, then click <strong>Run Cascaded 3-Stage Prediction</strong>.</p>
+        </div>
+
+        <!-- Populated Results Container -->
+        <div id="results-container" style="display: none;">
+            <!-- Top Summary Banner -->
+            <div class="summary-banner" id="summary-banner">
+                <div class="summary-main">
+                    <div class="placement-badge" id="placement-badge">
+                        <span id="placement-text">Placed</span>
+                    </div>
+                    <div class="summary-meta">
+                        <span class="meta-label">Campus Placement Outcome</span>
+                        <div class="prob-bar-wrapper">
+                            <div class="prob-bar" id="prob-bar" style="width: 50%;"></div>
+                        </div>
+                        <div class="prob-values">
+                            <span>Hybrid Probability: <strong id="prob-val">0.0%</strong></span>
+                            <span>Model Confidence: <strong id="conf-val">0.0%</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="summary-stages-preview">
+                    <div class="preview-item">
+                        <span class="preview-label">Stage 1 Branch Fit:</span>
+                        <strong id="preview-branch">Mechanical Engineering</strong>
+                    </div>
+                    <div class="preview-item">
+                        <span class="preview-label">Stage 2 Academic Tier:</span>
+                        <strong id="preview-tier">At-Risk</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cascading Multi-Stage Stepper Flow -->
+            <div class="cascade-pipeline-stepper">
+                <div class="stepper-node">
+                    <div class="stepper-header">
+                        <span class="stepper-step-tag"><i class="fa-solid fa-code-fork"></i> Stage 1 Fit</span>
+                        <span class="badge badge-primary">RF Recommender</span>
+                    </div>
+                    <span class="stepper-title">Recommended Branch</span>
+                    <span class="stepper-value" id="stepper-stage1">-</span>
+                </div>
+                <div class="stepper-node">
+                    <div class="stepper-header">
+                        <span class="stepper-step-tag"><i class="fa-solid fa-graduation-cap"></i> Stage 2 Tier</span>
+                        <span class="badge badge-success">XGB+GB Forecaster</span>
+                    </div>
+                    <span class="stepper-title">Academic Projection</span>
+                    <span class="stepper-value" id="stepper-stage2">-</span>
+                </div>
+                <div class="stepper-node">
+                    <div class="stepper-header">
+                        <span class="stepper-step-tag"><i class="fa-solid fa-briefcase"></i> Stage 3 Outcome</span>
+                        <span class="badge badge-info">Hybrid Ensemble</span>
+                    </div>
+                    <span class="stepper-title">Campus Placement</span>
+                    <span class="stepper-value" id="stepper-stage3">-</span>
+                </div>
+            </div>
+
+            <!-- Stage 1 & 2 Cards Grid -->
+            <div class="two-col-grid">
+                <!-- Stage 1 Card -->
+                <div class="card stage-card">
+                    <div class="card-header">
+                        <span class="stage-num">Stage 1</span>
+                        <h3>Branch Recommendation</h3>
+                        <span class="badge badge-primary">Random Forest</span>
+                    </div>
+                    <div class="stage-body">
+                        <div class="recommended-badge">
+                            <i class="fa-solid fa-compass"></i>
+                            <span id="stage1-recommended">Computer Science & Engineering</span>
+                        </div>
+                        <div class="chart-container" style="height: 180px;">
+                            <canvas id="branchChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 2 Card -->
+                <div class="card stage-card">
+                    <div class="card-header">
+                        <span class="stage-num">Stage 2</span>
+                        <h3>Academic Forecast</h3>
+                        <span class="badge badge-success">XGBoost + GB</span>
+                    </div>
+                    <div class="stage-body">
+                        <div class="recommended-badge academic-badge">
+                            <i class="fa-solid fa-award"></i>
+                            <span id="stage2-tier">First Class</span>
+                        </div>
+                        <div class="chart-container" style="height: 180px;">
+                            <canvas id="academicChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Explainable AI (SHAP) Attribution -->
+            <div class="card xai-card">
+                <div class="card-header">
+                    <div class="title-with-icon">
+                        <i class="fa-solid fa-brain text-info"></i>
+                        <div>
+                            <h3>Local SHAP Feature Attribution (Waterfall Decomposition)</h3>
+                            <span class="card-subtitle">f(x_i) = φ_0 + Σ φ_j(x_i) &mdash; Explaining individual positive and negative drivers</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-info">Additive Attribution</span>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="height: 240px;">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actionable Counterfactual Recourse -->
+            <div class="card recourse-card">
+                <div class="card-header">
+                    <div class="title-with-icon">
+                        <i class="fa-solid fa-route text-success"></i>
+                        <div>
+                            <h3>Actionable Counterfactual Recourse (Table V & Figure 3b)</h3>
+                            <span class="card-subtitle">Constrained optimization over mutable features F_mut while keeping socio-demographics F_imm strictly untouched</span>
+                        </div>
+                    </div>
+                    <span class="badge badge-success">Early Intervention</span>
+                </div>
+                <div class="card-body">
+                    <!-- Recourse Trajectory Comparison -->
+                    <div class="recourse-trajectory-row">
+                        <div class="trajectory-stat">
+                            <span class="t-label">Baseline Institutional Expectation</span>
+                            <span class="t-val text-muted">68.0%</span>
+                        </div>
+                        <div class="trajectory-arrow">&rarr;</div>
+                        <div class="trajectory-stat">
+                            <span class="t-label">Current Forecasted Probability</span>
+                            <span class="t-val text-danger" id="current-prob-stat">28.0%</span>
+                        </div>
+                        <div class="trajectory-arrow">&rarr;</div>
+                        <div class="trajectory-stat highlight-stat">
+                            <span class="t-label">Target Recourse Probability</span>
+                            <span class="t-val text-success" id="target-prob-stat">84.5%</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Simulator Action Box -->
+                    <div class="simulator-box" id="simulator-box">
+                        <div class="simulator-box-text">
+                            <h4><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive Recourse Action Simulator</h4>
+                            <p>Apply the algorithmically recommended targets ($x_i^*$) directly to this student profile and re-execute the cascaded pipeline live.</p>
+                        </div>
+                        <button type="button" class="btn btn-success" id="apply-recourse-btn" onclick="applyCounterfactualRecourse()">
+                            <i class="fa-solid fa-bolt"></i> Apply Interventions &amp; Re-Forecast
+                        </button>
+                    </div>
+
+                    <!-- Intervention Table -->
+                    <div class="table-responsive">
+                        <table class="table recourse-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature Name</th>
+                                    <th>Modality</th>
+                                    <th>Current Value</th>
+                                    <th>Target Threshold (x_i*)</th>
+                                    <th>Institutional Intervention & Student Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recourse-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="fairness-guarantee-note">
+                        <i class="fa-solid fa-shield-halved text-success"></i>
+                        <strong>Demographic Parity & Ethical Recourse Guarantee:</strong> Socio-economic indicators (Family Income, Parental Education, Family Size, Gender) are strictly bounded as immutable ($x'_{F_{imm}} = x_{i, F_{imm}}$). Interventions exclusively focus on actionable behavioral changes, tutoring, and university grants.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

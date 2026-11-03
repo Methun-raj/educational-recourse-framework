@@ -1,0 +1,10 @@
+Model Architecture,Task-Specific Accuracy (Demographic + Grade),General EDM Benchmark,Primary Input Features
+Artificial Neural Networks (ANN),98.3%,70-75%,"CGPA, gender, age, parental status/income, family size"
+Decision Trees (DT),98.2%,89.2%,"GPA, academic grades, basic demographic info"
+Naive Bayes (NB),97.0%,70-75%,Probabilistic mix of demographics and grades
+Random Forests (RF),70-75% (Midterm-only),85.0%-92.5%,"Midterm scores, numerical/categorical student records"
+Logistic Regression (LR),67.7%,85.0%,Linear baseline for student performance
+XGBoost,79.49%,Superior (90-95%),"English proficiency, GPA, social variables"
+Support Vector Machines (SVM),96.4%,70-75%,High-dimensional margin classification
+k-Nearest Neighbors (KNN),89.8%,70-75%,Distance-based classification using lifestyle & academics
+Gradient Boosting (GB),-,Superior,Captures non-linear relationships and missing data

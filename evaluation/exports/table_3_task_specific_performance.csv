@@ -1,0 +1,4 @@
+Prediction Stage / Task,Primary Model Configuration,Achieved Accuracy (%),Macro-F1 (%),Key Predictive Advantage
+Task 1: Post-Intermediate Branch Suggestion (Multi-Class),Random Forest Ensemble,87.0%,86.0%,Robust to noisy admissions data; handles mixed numerical and categorical features with intrinsic feature importance.
+Task 2: Academic Performance Forecasting,XGBoost + Gradient Boosting + SHAP,76.2%,67.3%,Captures intricate feature interactions and non-linear relationships across semester records.
+Task 3: Campus Placement Prediction (Binary),Hybrid XGBoost + SVM + SHAP,98.2%,96.6%,XGBoost resolves missing data and class imbalance while SVM enforces high-precision binary separation.

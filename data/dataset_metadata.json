@@ -1,0 +1,31 @@
+{
+  "dataset_type": "Synthetic Educational Benchmark Dataset",
+  "sample_count": 2500,
+  "source": "Generative simulation grounded in Educational Data Mining benchmarks",
+  "placement_rate": 0.8408,
+  "features": [
+    "student_id",
+    "age",
+    "gender",
+    "parental_education",
+    "parental_status",
+    "family_income_bracket",
+    "family_size",
+    "intermediate_math",
+    "intermediate_physics",
+    "intermediate_chemistry",
+    "intermediate_english",
+    "intermediate_aggregate",
+    "recommended_branch",
+    "attendance_percentage",
+    "study_hours_per_week",
+    "extracurricular_clubs",
+    "soft_skills_score",
+    "certifications_count",
+    "midterm_score",
+    "core_course_score",
+    "cgpa",
+    "academic_performance",
+    "placement_status"
+  ]
+}

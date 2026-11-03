@@ -1,0 +1,5 @@
+Feature Subset Configuration,Early-Stage Acc. (Sem 1-4),Final-Year Acc. (Sem 7-8),Demographic Parity Diff.,Observation & Impact on Early Intervention
+"Academic Transcripts Only (CGPA, Midterms)",86.6%,92.8%,0.063,Insufficient for early intervention; mirrors the 70–75% midterm-only RF baseline.
+Academic + Socio-Economic,86.6%,92.8%,0.063,Improves accuracy but increases socio-economic sensitivity without fairness constraints.
+Academic + Behavioral / Extracurricular,90.8%,96.2%,0.038,"Attendance, study habits, and extracurriculars strongly boost early-stage predictability."
+Full Multi-Modal + Fairness Constraint,91.0%,96.4%,0.031,Delivers high accuracy (90–95%) from early semesters while preserving demographic equity.

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  eduforecaster:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eduforecaster-app
+    ports:
+      - "5000:5000"
+    environment:
+      - APP_PORT=5000
+      - APP_HOST=0.0.0.0
+      - APP_DEBUG=False
+      - SECRET_KEY=production-secret-eduforecaster-2026
+    volumes:
+      - ./data:/app/data
+      - ./evaluation/exports:/app/evaluation/exports
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

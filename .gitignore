@@ -1,0 +1,27 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Environment
+venv/
+.env
+
+# Logs
+*.log
+framework.log
+
+# Temporary Word & Office lock files
+~$*.docx
+~$*.pptx
+~$*.xlsx
+
+# Large archives
+*.zip
+*.tar.gz
+*.rar
+
+# Model artifacts & caches (if regenerated via pipeline)
+# Uncomment if models should not be committed to Git:
+# models/*.joblib

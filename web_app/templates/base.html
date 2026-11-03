@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Academic & Placement Forecasting Framework{% endblock %}</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <i class="fa-solid fa-graduation-cap brand-icon"></i>
+                <div class="brand-text">
+                    <span class="brand-title">EduForecaster XAI</span>
+                    <span class="brand-subtitle">Hierarchical Multi-Task & Recourse Framework</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-line"></i> Predictor & Recourse
+                </a>
+                <a href="{{ url_for('benchmarks') }}" class="nav-link {% if request.endpoint == 'benchmarks' %}active{% endif %}">
+                    <i class="fa-solid fa-flask-vial"></i> Research Benchmarks
+                </a>
+                <a href="{{ url_for('datasets_view') }}" class="nav-link {% if request.endpoint == 'datasets_view' %}active{% endif %}">
+                    <i class="fa-solid fa-database"></i> Datasets Explorer
+                </a>
+                <a href="{{ url_for('documentation') }}" class="nav-link {% if request.endpoint == 'documentation' %}active{% endif %}">
+                    <i class="fa-solid fa-book-bookmark"></i> Methodology & Architecture
+                </a>
+            </nav>
+            <div class="header-badge">
+                <span class="status-indicator"></span> 95.2% Ensemble Accuracy
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>Based on: <em>"Machine Learning-Based Forecasting of Student Academic Success, Branch Recommendation, and Career Placement: A Hierarchical Multi-Task and Explainable Recourse Framework"</em></p>
+            <p class="footer-credits">Educational Data Mining (EDM) &middot; SHAP Interpretability &middot; Constrained Counterfactual Recourse</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,8 @@
+Feature Name,Modality,Global Mean |SHAP|,At-Risk Student Current Value,Local SHAP (phi_j),Counterfactual Target (x_i*),Recommended Institutional / Student Action
+Cumulative GPA (CGPA),Academic,+2.583,6.4 / 10.0,-2.748,>= 7.15 / 10.0,Enroll in targeted core-subject academic tutoring and weekly problem sets.
+Attendance Percentage,Behavioral,+1.093,64.0 %,-1.473,>= 71.5 %,Faculty mentor monitoring; establish mandatory 80%+ attendance agreement.
+Subject Strengths (Core Courses),Academic,+1.600,58.0 %,-1.433,>= 65.5 %,Assign domain-specific lab practice and peer-assisted learning sessions.
+Extracurricular & Tech Clubs,Behavioral,+0.858,0 activities,-1.193,>= 2 activities,"Participate in coding hackathons, technical paper contests, or student chapters."
+Soft Skills & Mock Assessment,Behavioral,+0.712,2.0 / 5,-1.126,>= 2.9 / 5,Placement officer intervention: early aptitude bootcamps and mock interview sessions.
+Socio-Economic / Family Income,Socio-Econ.,+0.007,Tier-3 Low,+0.021,Immutable (Tier-3 Low),Trigger institutional scholarship / laptop support grant (Immutable - Support Provided).
+Predicted Placement Probability,Output,Base: 0.680,Current: 0.000,Sum(phi) = -0.710,Target: 0.911,Proactive intervention 4 semesters prior to placement.
