@@ -17,6 +17,7 @@ Generates:
 
 import os
 import sys
+from typing import Dict, Any, List, Optional, Tuple
 
 # Ensure root directory is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
